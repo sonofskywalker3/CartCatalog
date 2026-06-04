@@ -66,6 +66,10 @@ namespace CartCatalog.Delivery
 
             var pkg = (SObject)ItemRegistry.Create(this.ResolvePackageId());
             pkg.modData[PackageFlag] = "1";
+            // checkAction only routes "Crafting"/"interactive" types to checkForAction. Big-craftables
+            // already qualify; promote the Wood fallback so the package is always collectable.
+            if (pkg.Type != "Crafting" && pkg.Type != "interactive")
+                pkg.Type = "Crafting";
             pkg.TileLocation = tile;
             pkg.Location = farm;
             farm.objects[tile] = pkg;
