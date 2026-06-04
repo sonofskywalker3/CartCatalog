@@ -35,6 +35,11 @@ namespace CartCatalog
             var harmony = new Harmony(this.ModManifest.UniqueID);
             harmony.PatchAll();
 
+            // Arm the porch-package pickup patch (the patch stays inert until a flagged package
+            // exists; PorchDelivery, which places one, is wired in a later task).
+            Catalog.Object_checkForAction_PackagePatch.Orders = _orders;
+            Catalog.Object_checkForAction_PackagePatch.Monitor = this.Monitor;
+
             helper.Events.GameLoop.SaveLoaded += (_, _) =>
             {
                 _orders.Load();
