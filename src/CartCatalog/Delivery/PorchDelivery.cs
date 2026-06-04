@@ -77,7 +77,10 @@ namespace CartCatalog.Delivery
             pkg.TileLocation = tile;
             pkg.Location = farm;
             farm.objects[tile] = pkg;
-            _monitor.Log($"Placed Cart Catalog package at {tile} carrying {due.Count} order(s).", LogLevel.Info);
+            Point entry = farm.GetMainFarmHouseEntry();
+            _monitor.Log(
+                $"Placed Cart Catalog package at {tile} (door entry {entry.X},{entry.Y}) carrying {due.Count} order(s).",
+                LogLevel.Info);
         }
 
         /// <summary>Resolve the crate sprite's qualified id by Name from the loaded big-craftable data
