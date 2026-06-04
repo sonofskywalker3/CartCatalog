@@ -16,6 +16,7 @@ namespace CartCatalog
         private BookItem _bookItem;
         private OrderStore _orders;
         private CatalogMenu _catalogMenu;
+        private PorchDelivery _porch;
 
         public override void Entry(IModHelper helper)
         {
@@ -26,7 +27,7 @@ namespace CartCatalog
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
 
             _orders = new OrderStore(helper.Data);
-            _ = new MailDelivery(helper, this.Monitor, _orders);
+            _porch = new PorchDelivery(helper, this.Monitor, _orders);
             _ = new BookShopInjection(helper, () => _config.BookPrice, () => _config.AppearanceChance);
             helper.Events.GameLoop.DayStarted += (_, _) => helper.GameContent.InvalidateCache("Data/Shops");
             _catalogMenu = new CatalogMenu(this.Monitor, () => _config.Markup, this.QueueOrder);
@@ -35,21 +36,23 @@ namespace CartCatalog
             var harmony = new Harmony(this.ModManifest.UniqueID);
             harmony.PatchAll();
 
-            // Arm the porch-package pickup patch (the patch stays inert until a flagged package
-            // exists; PorchDelivery, which places one, is wired in a later task).
+            // Give the porch-package pickup patch the live order store (Harmony patches are static).
             Catalog.Object_checkForAction_PackagePatch.Orders = _orders;
             Catalog.Object_checkForAction_PackagePatch.Monitor = this.Monitor;
 
             helper.Events.GameLoop.SaveLoaded += (_, _) =>
             {
                 _orders.Load();
-                // Rebuild the book's cart entry for this save (PlayerOwnsBook gate), and re-inject
-                // persisted, not-yet-read letters into Data/mail so a save/quit before reading the
-                // mail doesn't lose the item (the body isn't stored in the vanilla save).
+                // Rebuild the book's cart entry for this save (PlayerOwnsBook gate), and re-place the
+                // porch package if orders are already due (it is never serialized into the farm save).
                 helper.GameContent.InvalidateCache("Data/Shops");
-                helper.GameContent.InvalidateCache("Data/mail");
+                _porch.PlaceIfDue();
             };
-            helper.Events.GameLoop.Saving += (_, _) => _orders.Save();
+            helper.Events.GameLoop.Saving += (_, _) =>
+            {
+                _porch.RemovePackage();   // don't serialize the transient package
+                _orders.Save();
+            };
 
             helper.ConsoleCommands.Add("cc_givebook",
                 "Give the Cart Catalog book to the player.", this.CmdGiveBook);
