@@ -122,13 +122,13 @@ namespace CartCatalog
             _catalogMenu.Open();
         }
 
-        /// <summary>Queue one unit of the purchased item for next-day mail delivery. Gold was already
+        /// <summary>Queue one unit of the purchased item for next-day porch delivery. Gold was already
         /// deducted by the ShopMenu using the marked-up salable price.</summary>
         private void QueueOrder(ISalable inner, int quantity)
         {
             if (inner is not Item item)
             {
-                this.Monitor.Log($"Cannot mail-order non-item salable '{inner?.DisplayName}'.", LogLevel.Warn);
+                this.Monitor.Log($"Cannot queue non-item salable '{inner?.DisplayName}' for delivery.", LogLevel.Warn);
                 return;
             }
 

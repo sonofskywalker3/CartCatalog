@@ -5,7 +5,7 @@ using SObject = StardewValley.Object;
 namespace CartCatalog.Catalog
 {
     /// <summary>While the Cart Catalog menu is open, force every salable's <c>actionWhenPurchased</c>
-    /// to return true so the item is NOT granted to the inventory — it's mail-ordered instead.
+    /// to return true so the item is NOT granted to the inventory — it's queued for porch delivery instead.
     ///
     /// Both purchase paths skip the immediate grant when <c>actionWhenPurchased</c> returns true:
     /// vanilla <c>ShopMenu.tryToPurchaseItem</c> nulls <c>heldItem</c> (so nothing is added), and
@@ -18,7 +18,7 @@ namespace CartCatalog.Catalog
     ///
     /// Most cart salables are <c>StardewValley.Object</c> (and Furniture/Ring subclasses), which use
     /// <c>Object.actionWhenPurchased</c>; hats/boots/weapons/clothing use <c>Item.actionWhenPurchased</c>.
-    /// Patch both base methods so every mailable type is covered.</summary>
+    /// Patch both base methods so every orderable type is covered.</summary>
     internal static class PurchaseSuppression
     {
         internal static bool ShouldSuppressGrant()
@@ -32,7 +32,7 @@ namespace CartCatalog.Catalog
         private static bool Prefix(ref bool __result)
         {
             if (!PurchaseSuppression.ShouldSuppressGrant()) return true;
-            __result = true;   // treat as "handled" → no grant; order is mailed
+            __result = true;   // treat as "handled" → no grant; order is queued
             return false;      // skip the original
         }
     }

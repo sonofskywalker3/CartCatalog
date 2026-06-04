@@ -8,7 +8,7 @@ using StardewValley.Menus;
 namespace CartCatalog.Catalog
 {
     /// <summary>Builds a vanilla ShopMenu over today's Traveling Cart stock, with marked-up prices and
-    /// purchases routed into next-day mail orders instead of being granted immediately.</summary>
+    /// purchases routed into next-day porch-package orders instead of being granted immediately.</summary>
     internal sealed class CatalogMenu
     {
         private const string TravelerShopId = "Traveler";
@@ -44,11 +44,11 @@ namespace CartCatalog.Catalog
             var stock = new Dictionary<ISalable, ItemStockInformation>();
             foreach (KeyValuePair<ISalable, ItemStockInformation> pair in raw)
             {
-                // Skip only entries the mail-order path genuinely can't handle: non-Items (nothing to
-                // mail/identify), recipes (the player would need to learn them, not receive an item), and
-                // the catalog book itself (mustn't be orderable through itself). Every other real item the
-                // cart stocks is mailable: the delivery letter uses the universal "%item id" token, which
-                // handles any qualified id — (O)(BC)(F)(H)(W)(B)(S/P)(R).
+                // Skip only entries the delivery path genuinely can't handle: non-Items (nothing to
+                // create/identify) and recipes (the player would need to learn them, not receive an item).
+                // Also skip the catalog book itself (mustn't be orderable through itself). Everything else
+                // the cart stocks can be delivered: the package re-creates each order via
+                // ItemRegistry.Create, which handles any qualified id — (O)(BC)(F)(H)(W)(B)(S/P)(R).
                 if (pair.Key is not Item item) continue;
                 if (item.IsRecipe) continue;
                 if (item.QualifiedItemId == BookItem.QualifiedId) continue;
@@ -82,7 +82,7 @@ namespace CartCatalog.Catalog
             // Make the catalog strictly buy-only. ShopMenu seeds categoriesToSellHere from the
             // location the menu opens in (SeedShop, FishShop, Blacksmith, ...), so opening the catalog
             // while standing in a shop would let the player sell that shop's categories to the cart
-            // from anywhere. The cart is mail-order purchase only — clear the sell categories.
+            // from anywhere. The catalog is order-only (no selling) — clear the sell categories.
             _menu.categoriesToSellHere.Clear();
             ActiveCatalog = _menu;
             Game1.activeClickableMenu = _menu;
@@ -90,7 +90,7 @@ namespace CartCatalog.Catalog
         }
 
         /// <summary>ShopMenu purchase callback. The player has been charged the marked-up price; queue
-        /// the item as a next-day mail order. The immediate inventory grant is suppressed by the
+        /// the item for next-day porch delivery. The immediate inventory grant is suppressed by the
         /// actionWhenPurchased Harmony patch (scoped to <see cref="ActiveCatalog"/>), which both the
         /// vanilla ShopMenu and AndroidConsolizer's A-button purchase path honor. Returns false so the
         /// shop stays open.</summary>

@@ -6,7 +6,7 @@ namespace CartCatalog
         /// <summary>Shipping multiplier applied to each item's cart price (1.05 = +5%).</summary>
         public double Markup { get; set; } = 1.05;
 
-        /// <summary>Whole days between ordering and mailbox delivery (1 = next morning).</summary>
+        /// <summary>Whole days between ordering and porch delivery (1 = next morning).</summary>
         public int DeliveryDelayDays { get; set; } = 1;
 
         /// <summary>Gold price of the Cart Catalog book in the Traveling Cart.</summary>
