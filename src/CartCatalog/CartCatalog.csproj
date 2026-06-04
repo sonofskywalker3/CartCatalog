@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableHarmony>true</EnableHarmony>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CartCatalog.Core\CartCatalog.Core.csproj" />
+  </ItemGroup>
+
+  <!-- The Cart Catalog book sprite (16x16). book_preview.png and the generator script are
+       source-only and intentionally not shipped. -->
+  <ItemGroup>
+    <Content Include="assets\book.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+# .NET build output
+bin/
+obj/
+
+# Rider / VS
+.vs/
+.idea/
+*.user
+
+# OS
+Thumbs.db
+.DS_Store
+
+# generated sprite preview (regenerate via assets/generate_book_sprite.py)
+src/CartCatalog/assets/book_preview.png
