@@ -6,7 +6,7 @@
     "UniqueID": "sonofskywalker3.CartCatalog",
     "EntryDll": "CartCatalog.dll",
     "MinimumApiVersion": "4.0.0",
-    "UpdateKeys": [ "GitHub:sonofskywalker3/CartCatalog" ],
+    "UpdateKeys": [ "Nexus:47146", "GitHub:sonofskywalker3/CartCatalog" ],
     "Dependencies": [
         {
             "UniqueID": "spacechase0.GenericModConfigMenu",
