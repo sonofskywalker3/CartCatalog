@@ -36,18 +36,17 @@ namespace CartCatalog.Delivery
             var (due, remaining) = PendingOrders.Due(_orders.Orders, today);
             if (due.Count == 0) return;
 
-            int n = 0;
-            foreach (PendingOrder order in due)
-            {
-                string key = MailKeyPrefix + today + "_" + (n++);
-                _orders.Letters[key] = BuildLetter(order);
-                if (!Game1.player.mailbox.Contains(key))
-                    Game1.player.mailbox.Add(key);
-            }
+            // All of a day's orders arrive in ONE letter: each distinct item is its own "%item id"
+            // attachment and same-item orders are merged into a single stack (handled by MailLetter).
+            // One mail key per delivery day (TotalDays is unique), so no per-order suffix is needed.
+            string key = MailKeyPrefix + today;
+            _orders.Letters[key] = MailLetter.Build(due.Select(o => (o.ItemId, o.Quantity)));
+            if (!Game1.player.mailbox.Contains(key))
+                Game1.player.mailbox.Add(key);
 
             _orders.Replace(remaining);
             _helper.GameContent.InvalidateCache(MailAsset);
-            _monitor.Log("Delivered " + due.Count + " Cart Catalog order(s) to the mailbox.", LogLevel.Info);
+            _monitor.Log($"Delivered {due.Count} Cart Catalog order(s) in one letter.", LogLevel.Info);
         }
 
         /// <summary>Drop letters the player has already read (key now in mailReceived) so the
@@ -58,12 +57,6 @@ namespace CartCatalog.Delivery
             List<string> read = _orders.Letters.Keys.Where(k => Game1.player.mailReceived.Contains(k)).ToList();
             foreach (string k in read) _orders.Letters.Remove(k);
         }
-
-        /// <summary>Build the letter body. Delegates to <see cref="MailLetter.Build"/>, which uses
-        /// the universal "%item id" token so quantity is honored for every mailable item type — not
-        /// just objects. (The old per-type "bigobject"/"furniture" tokens ignored count.)</summary>
-        private static string BuildLetter(PendingOrder order)
-            => MailLetter.Build(order.ItemId, order.Quantity);
 
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
