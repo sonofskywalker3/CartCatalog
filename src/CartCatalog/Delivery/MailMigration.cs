@@ -25,12 +25,22 @@ namespace CartCatalog.Delivery
             var letters = helper.Data.ReadSaveData<Dictionary<string, string>>(LegacyLettersKey);
             if (letters == null || letters.Count == 0) return;
 
+            // Items already recovered in a prior session: migrated orders use DeliveryDay 0 (normal
+            // orders never do). If the game crashed between _orders.Save() and CommitOnSave(), the
+            // legacy data is still present on the next load; skipping ids already persisted prevents a
+            // double-grant. Snapshot taken BEFORE the loop so two unread letters for the SAME item in
+            // one pass are both still recovered.
+            var alreadyRecovered = new HashSet<string>();
+            foreach (PendingOrder existing in orders.Orders)
+                if (existing.DeliveryDay == 0) alreadyRecovered.Add(existing.ItemId);
+
             int recovered = 0;
             foreach (KeyValuePair<string, string> kv in letters)
             {
                 if (Game1.player.mailReceived.Contains(kv.Key)) continue;   // already read → already granted
                 foreach (PendingOrder o in LetterItemParser.Parse(kv.Value))
                 {
+                    if (alreadyRecovered.Contains(o.ItemId)) continue;   // already recovered + persisted
                     orders.Add(o);
                     recovered++;
                 }
