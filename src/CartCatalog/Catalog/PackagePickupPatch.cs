@@ -37,8 +37,7 @@ namespace CartCatalog.Catalog
             GameLocation farm = __instance.Location ?? Game1.getFarm();
             Vector2 pixel = tile * 64f + new Vector2(32f, 32f);
 
-            int today = Game1.Date.TotalDays;
-            var (due, remaining) = PendingOrders.Due(Orders.Orders, today);
+            var (due, remaining) = PendingOrders.Due(Orders.Orders, Game1.Date.TotalDays);
             foreach (PendingOrder o in OrderMerge.Merge(due))
             {
                 Item item = ItemRegistry.Create(o.ItemId, o.Quantity);
@@ -48,9 +47,16 @@ namespace CartCatalog.Catalog
             }
 
             Orders.Replace(remaining);
+            // TileLocation and the objects-dict key are set together in PorchDelivery.PlaceIfDue().
             farm.objects.Remove(tile);
             Game1.playSound("pickUpItem");
-            Monitor?.Log($"Collected Cart Catalog package: {due.Count} order(s).", LogLevel.Info);
+
+            // due.Count == 0 should be unreachable (a package is only placed when orders are due),
+            // but a hand-edited/corrupt save could reach it — warn instead of silently eating the crate.
+            if (due.Count > 0)
+                Monitor?.Log($"Collected Cart Catalog package: {due.Count} order(s).", LogLevel.Info);
+            else
+                Monitor?.Log("Removed a stale Cart Catalog package with no due orders.", LogLevel.Warn);
 
             __result = true;
             return false;
