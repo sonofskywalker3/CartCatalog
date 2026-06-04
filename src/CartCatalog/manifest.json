@@ -1,7 +1,7 @@
 {
     "Name": "Cart Catalog",
     "Author": "sonofskywalker3",
-    "Version": "0.9.4",
+    "Version": "0.9.5",
     "Description": "Mail-order from the Traveling Cart's daily stock. Buy the Cart Catalog book from the cart, then order any day; items arrive by mail next morning (+5% shipping).",
     "UniqueID": "sonofskywalker3.CartCatalog",
     "EntryDll": "CartCatalog.dll",

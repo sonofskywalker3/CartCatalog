@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.GameData.BigCraftables;
 using SObject = StardewValley.Object;
 
 namespace CartCatalog.Delivery
@@ -18,10 +19,17 @@ namespace CartCatalog.Delivery
         /// <summary>modData key marking our package so the checkForAction patch only fires on it.</summary>
         internal const string PackageFlag = "sonofskywalker3.CartCatalog/Package";
 
-        /// <summary>Big-craftable Supply Crate sprite — a wooden delivery crate. Verify it resolves in
-        /// the SMAPI log on first run; if ItemRegistry logs an unknown-id error, swap for another
-        /// crate/box id and rebuild.</summary>
-        internal const string PackageItemId = "(BC)165";
+        /// <summary>Internal name of the vanilla big-craftable used as the package sprite (a wooden
+        /// delivery crate). Resolved to a qualified id by Name at runtime because the numeric id
+        /// differs between game versions — never hardcode it.</summary>
+        private const string PackageItemName = "Crate";
+        private const string FallbackItemName = "Barrel";
+
+        // Guaranteed-valid visible fallback if neither crate sprite is in the game data.
+        private const string FallbackQualifiedId = "(O)388";   // Wood
+
+        // Resolved qualified id ("(BC)<key>"); looked up once per session, cached.
+        private string _packageQualifiedId;
 
         // Max ring radius for the nearest-free-tile fallback search around the door.
         private const int MaxSearchRadius = 6;
@@ -56,12 +64,35 @@ namespace CartCatalog.Delivery
                 return;
             }
 
-            var pkg = (SObject)ItemRegistry.Create(PackageItemId);
+            var pkg = (SObject)ItemRegistry.Create(this.ResolvePackageId());
             pkg.modData[PackageFlag] = "1";
             pkg.TileLocation = tile;
             pkg.Location = farm;
             farm.objects[tile] = pkg;
             _monitor.Log($"Placed Cart Catalog package at {tile} carrying {due.Count} order(s).", LogLevel.Info);
+        }
+
+        /// <summary>Resolve the crate sprite's qualified id by Name from the loaded big-craftable data
+        /// (version-proof). Falls back to a barrel, then to Wood, logging if the crate isn't found.</summary>
+        private string ResolvePackageId()
+        {
+            if (_packageQualifiedId != null) return _packageQualifiedId;
+
+            foreach (string wanted in new[] { PackageItemName, FallbackItemName })
+            {
+                foreach (KeyValuePair<string, BigCraftableData> kv in Game1.bigCraftableData)
+                {
+                    if (string.Equals(kv.Value.Name, wanted, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _packageQualifiedId = "(BC)" + kv.Key;
+                        return _packageQualifiedId;
+                    }
+                }
+            }
+
+            _packageQualifiedId = FallbackQualifiedId;
+            _monitor.Log("Crate/Barrel big-craftable not found in data; using Wood as the package sprite.", LogLevel.Warn);
+            return _packageQualifiedId;
         }
 
         /// <summary>Remove the package so it isn't serialized into the save (re-placed on next load
