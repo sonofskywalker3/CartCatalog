@@ -75,4 +75,20 @@ namespace CartCatalog.Catalog
             }
         }
     }
+
+    /// <summary>Stop a tool swing — or the stand-on-tile action path, which tries the pickaxe/axe
+    /// first — from destroying the porch package. Returning false skips vanilla destruction;
+    /// GameLocation.checkAction then falls through to checkForAction, so pressing action while standing
+    /// on the crate still collects it. Gated by the same modData flag.</summary>
+    [HarmonyPatch(typeof(SObject), nameof(SObject.performToolAction))]
+    internal static class Object_performToolAction_PackagePatch
+    {
+        private static bool Prefix(SObject __instance, ref bool __result)
+        {
+            if (!__instance.modData.ContainsKey(PorchDelivery.PackageFlag))
+                return true;     // not our package — run vanilla
+            __result = false;    // not destroyed/consumed by the tool
+            return false;
+        }
+    }
 }
