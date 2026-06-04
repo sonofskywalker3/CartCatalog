@@ -30,7 +30,7 @@ public class LetterItemParserTests
     [Fact]
     public void Parse_returns_empty_for_null_or_empty()
     {
-        Assert.Empty(LetterItemParser.Parse(null));
+        Assert.Empty(LetterItemParser.Parse(null!));
         Assert.Empty(LetterItemParser.Parse(""));
     }
 
