@@ -43,6 +43,7 @@ namespace CartCatalog
             helper.Events.GameLoop.SaveLoaded += (_, _) =>
             {
                 _orders.Load();
+                MailMigration.RecoverOnLoad(helper, this.Monitor, _orders);
                 // Rebuild the book's cart entry for this save (PlayerOwnsBook gate), and re-place the
                 // porch package if orders are already due (it is never serialized into the farm save).
                 helper.GameContent.InvalidateCache("Data/Shops");
@@ -52,6 +53,7 @@ namespace CartCatalog
             {
                 _porch.RemovePackage();   // don't serialize the transient package
                 _orders.Save();
+                MailMigration.CommitOnSave(helper);   // finalize legacy-letter migration after orders persist
             };
 
             helper.ConsoleCommands.Add("cc_givebook",
