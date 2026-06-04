@@ -39,12 +39,7 @@ namespace CartCatalog.Catalog
 
             var (due, remaining) = PendingOrders.Due(Orders.Orders, Game1.Date.TotalDays);
             foreach (PendingOrder o in OrderMerge.Merge(due))
-            {
-                Item item = ItemRegistry.Create(o.ItemId, o.Quantity);
-                Item leftover = Game1.player.addItemToInventory(item);
-                if (leftover != null && leftover.Stack > 0)
-                    Game1.createItemDebris(leftover, pixel, -1, farm);
-            }
+                GrantOrDrop(o.ItemId, o.Quantity, pixel, farm);
 
             Orders.Replace(remaining);
             // TileLocation and the objects-dict key are set together in PorchDelivery.PlaceIfDue().
@@ -60,6 +55,24 @@ namespace CartCatalog.Catalog
 
             __result = true;
             return false;
+        }
+
+        /// <summary>Add <paramref name="quantity"/> of an item to the player, split into max-stack-sized
+        /// chunks so non-stackable types (furniture/rings/boots/hats/weapons/big-craftables) never form
+        /// an illegal over-stack. Anything that doesn't fit drops as ground debris at the package tile.</summary>
+        private static void GrantOrDrop(string itemId, int quantity, Vector2 pixel, GameLocation location)
+        {
+            int max = ItemRegistry.Create(itemId, 1).maximumStackSize();
+            if (max < 1) max = 1;
+            int remaining = quantity;
+            while (remaining > 0)
+            {
+                int n = System.Math.Min(max, remaining);
+                Item leftover = Game1.player.addItemToInventory(ItemRegistry.Create(itemId, n));
+                if (leftover != null && leftover.Stack > 0)
+                    Game1.createItemDebris(leftover, pixel, -1, location);
+                remaining -= n;
+            }
         }
     }
 }
