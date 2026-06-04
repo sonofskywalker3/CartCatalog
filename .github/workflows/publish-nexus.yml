@@ -61,10 +61,11 @@ jobs:
         uses: Nexus-Mods/upload-action@main
         with:
           api_key: ${{ secrets.NEXUS_API_KEY }}
-          # First upload keys off the mod ID (a new page has no file_group_id yet).
-          # After the first release you may switch to the file_group_id of the main
-          # file for guaranteed in-place replacement, like the AndroidConsolizer workflow.
-          mod_id: 47146
+          # Nexus file_group_id (NOT the mod ID). The action replaces files within an
+          # existing file group; it can't create the first one. The first file for
+          # mod 47146 was uploaded via tools/nexus-upload.mjs (POST /mod-files), which
+          # created this group. From here every release auto-replaces it in place.
+          file_group_id: 7497950
           filename: ${{ steps.zip.outputs.path }}
           version: ${{ steps.release.outputs.version }}
           file_category: main
