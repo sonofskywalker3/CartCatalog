@@ -34,6 +34,10 @@ namespace CartCatalog.Delivery
         // Max ring radius for the nearest-free-tile fallback search around the door.
         private const int MaxSearchRadius = 6;
 
+        // Preferred package tiles as X-offsets right of the door entry: +3 first (the porch tile the
+        // user wants), +1 as fallback. Both are non-buildable porch tiles and dodge the spouse spot (+2).
+        private static readonly int[] PreferredOffsetsX = { 3, 1 };
+
         private readonly IMonitor _monitor;
         private readonly OrderStore _orders;
 
@@ -123,23 +127,35 @@ namespace CartCatalog.Delivery
             return false;
         }
 
-        /// <summary>Use the door entry tile if free, else the nearest free placeable tile spiraling
-        /// outward, skipping the two tiles flanking the door (user reports those are unusable).</summary>
+        /// <summary>Pick the package tile. Preferred porch spots, in order: 3 tiles right of the door
+        /// entry, then 1 tile right — both are non-buildable porch tiles (so they never collide with a
+        /// player's chest/furnace), and both clear the spouse's porch-standing spot at entry.X+2
+        /// (FarmHouse.getPorchStandingSpot) and the door at (entry.X, entry.Y-1). These are force-placed:
+        /// we only require the tile is on the map and not already holding an object — NOT that the game
+        /// considers it player-placeable (these porch tiles aren't). Falls back to a spiral search
+        /// (skipping the door, its flanking tiles, and the spouse spot) if both preferred spots are
+        /// taken.</summary>
         private static bool TryFindFreeTile(Farm farm, out Vector2 tile)
         {
             Point entry = farm.GetMainFarmHouseEntry();
-            var flanking = new HashSet<Vector2>
-            {
-                new Vector2(entry.X - 1, entry.Y),
-                new Vector2(entry.X + 1, entry.Y),
-            };
 
-            var center = new Vector2(entry.X, entry.Y);
-            if (IsFree(farm, center))
+            foreach (int dx in PreferredOffsetsX)
             {
-                tile = center;
-                return true;
+                var spot = new Vector2(entry.X + dx, entry.Y);
+                if (farm.isTileOnMap(spot) && !farm.objects.ContainsKey(spot))
+                {
+                    tile = spot;
+                    return true;
+                }
             }
+
+            var avoid = new HashSet<Vector2>
+            {
+                new Vector2(entry.X, entry.Y - 1),   // door
+                new Vector2(entry.X - 1, entry.Y),   // door-flanking (unusable)
+                new Vector2(entry.X + 1, entry.Y),   // door-flanking (unusable)
+                new Vector2(entry.X + 2, entry.Y),   // spouse porch-standing spot
+            };
 
             for (int r = 1; r <= MaxSearchRadius; r++)
             {
@@ -148,7 +164,7 @@ namespace CartCatalog.Delivery
                 {
                     if (Math.Max(Math.Abs(dx), Math.Abs(dy)) != r) continue;   // ring perimeter only
                     var c = new Vector2(entry.X + dx, entry.Y + dy);
-                    if (flanking.Contains(c)) continue;
+                    if (avoid.Contains(c)) continue;
                     if (IsFree(farm, c))
                     {
                         tile = c;
