@@ -55,6 +55,7 @@ Full disclosure: I have zero artistic ability, so the in-game book sprite and th
 
 - [**Android Consolizer**](https://www.nexusmods.com/stardewvalley/mods/41869) — Full console-style controller support for Stardew Valley on Android. Play the whole game on a gamepad.
 - [**Nap Time**](https://www.nexusmods.com/stardewvalley/mods/42616) — Nap in bed to recover energy without ending the day. Configurable rate and wake-up cap. PC + Android.
+- [**The Longest Year**](https://www.nexusmods.com/stardewvalley/mods/47192) — A roguelite time-loop: restore the Community Center within a year, or the Junimos rewind the seasons and you begin again, a little stronger. (Beta)
 
 ## Source
 

@@ -1,0 +1,68 @@
+[size=5][b]Cart Catalog[/b][/size]
+[b]Mail-order from the Traveling Cart's actual daily stock.[/b] Buy the Cart Catalog book from the cart, then from any day onward browse the cart's real stock for the day, place an order, and it arrives as a package on your porch the next morning — with a small shipping markup.
+
+[line]
+[size=4][b]What's New in v1.0.0 — Porch Package Delivery[/b][/size]
+[b]Orders now arrive as a physical package on your porch instead of a mailbox letter.[/b] Walk up to the crate the next morning and press the action button to collect everything inside. This fixes the old limit where ordering several different items in one day crammed them into a single hard-to-grab letter slot — every item now comes through in full, and uncollected days accumulate into one crate. Updating from a mail-based version? Any letter still unread in your mailbox is auto-converted into a porch package on your next load — nothing lost.
+
+[line]
+[size=4][b]Features[/b][/size]
+[list]
+[*][b]Order the cart's real daily stock[/b] — the catalog reads the same day-seeded Traveling Cart stock the cart itself sells, so it's deterministic per day (you can't reroll by reopening it).
+[*][b]Delivered to your porch[/b] — ordered items arrive in a crate by your farmhouse door the next morning (configurable delay). Walk up and press the action button to collect; if your inventory is full, the rest drops beside the crate. Gold is charged once, up front, at the marked-up price.
+[*][b]One crate, everything inside[/b] — a whole day's orders (and any days you haven't collected yet) accumulate into a single package, so distinct items never get lost in a cramped mail slot.
+[*][b]Any orderable cart item[/b] — objects, big craftables, furniture, hats, weapons, boots, rings and clothing the cart stocks can all be delivered.
+[*][b]Buy-only[/b] — the catalog never lets you sell to the cart; it's a purchase channel only.
+[*][b]GMCM support[/b] — tune everything in-game if Generic Mod Config Menu is installed (optional).
+[/list]
+
+[line]
+[size=4][b]Requirements[/b][/size]
+[list]
+[*]Stardew Valley 1.6.15+
+[*][url=https://smapi.io/]SMAPI[/url] 4.0+
+[*](Optional) [url=https://www.nexusmods.com/stardewvalley/mods/5098]Generic Mod Config Menu[/url] for an in-game settings UI
+[/list]
+
+[line]
+[size=4][b]Install[/b][/size]
+[list=1]
+[*]Install [url=https://smapi.io/]SMAPI[/url].
+[*]Download this mod and unzip it into your [font=Courier New]Stardew Valley/Mods[/font] folder (so you have [font=Courier New]Mods/CartCatalog/CartCatalog.dll[/font]).
+[*]Run the game with SMAPI.
+[/list]
+
+[line]
+[size=4][b]How to use[/b][/size]
+[list=1]
+[*]The [b]Cart Catalog[/b] book appears in the Traveling Cart for [b]5,000g[/b], at roughly a [b]50% chance per cart visit[/b] until you own one.
+[*]Buy it, then [b]place the book[/b] somewhere (it's placeable furniture).
+[*][b]Act on the placed book[/b] (action button) any day to open the catalog over the cart's stock for that day. Order what you want.
+[*]Your order arrives in a [b]crate on your porch the next morning[/b] — walk up and press the action button to collect it.
+[/list]
+
+[line]
+[size=4][b]Configuration[/b][/size]
+Settings live in [font=Courier New]config.json[/font] (created on first run) and can also be edited via GMCM:
+[list]
+[*][b]Markup[/b] (default 1.05) — shipping multiplier applied to each item's cart price (1.05 = +5%).
+[*][b]DeliveryDelayDays[/b] (default 1) — whole days between ordering and porch delivery (1 = next morning).
+[*][b]BookPrice[/b] (default 5000) — gold price of the Cart Catalog book in the Traveling Cart.
+[*][b]AppearanceChance[/b] (default 0.5) — chance the book appears in the cart each visit, while not already owned.
+[/list]
+
+[line]
+[size=4][b]Art help welcome[/b][/size]
+Full disclosure: I have zero artistic ability, so the in-game book sprite and the cover art are rough programmer placeholders. If you'd like to make a nicer icon or cover, please do — I'd happily use it and credit you.
+
+[line]
+[size=4][b]Also by this author[/b][/size]
+[list]
+[*][url=https://www.nexusmods.com/stardewvalley/mods/41869][b]Android Consolizer[/b][/url] — Full console-style controller support for Stardew Valley on Android. Play the whole game on a gamepad.
+[*][url=https://www.nexusmods.com/stardewvalley/mods/42616][b]Nap Time[/b][/url] — Nap in bed to recover energy without ending the day. Configurable rate and wake-up cap. PC + Android.
+[*][url=https://www.nexusmods.com/stardewvalley/mods/47192][b]The Longest Year[/b][/url] — A roguelite time-loop: restore the Community Center within a year, or the Junimos rewind the seasons and you begin again, a little stronger. (Beta)
+[/list]
+
+[line]
+[size=4][b]Source[/b][/size]
+Open source (MIT) — [url=https://github.com/sonofskywalker3/CartCatalog][b]github.com/sonofskywalker3/CartCatalog[/b][/url]
