@@ -34,17 +34,15 @@ namespace CartCatalog.Delivery
         // Max ring radius for the nearest-free-tile fallback search around the door.
         private const int MaxSearchRadius = 6;
 
-        // Preferred package tiles as X-offsets right of the door entry: +3 first (the porch tile the
-        // user wants), +1 as fallback. Both are non-buildable porch tiles and dodge the spouse spot (+2).
-        private static readonly int[] PreferredOffsetsX = { 3, 1 };
-
         private readonly IMonitor _monitor;
         private readonly OrderStore _orders;
+        private readonly Func<string> _packageSide;
 
-        public PorchDelivery(IModHelper helper, IMonitor monitor, OrderStore orders)
+        public PorchDelivery(IModHelper helper, IMonitor monitor, OrderStore orders, Func<string> packageSide)
         {
             _monitor = monitor;
             _orders = orders;
+            _packageSide = packageSide;
             helper.Events.GameLoop.DayStarted += (_, _) => this.PlaceIfDue();
         }
 
@@ -62,7 +60,7 @@ namespace CartCatalog.Delivery
             if (farm == null) return;
             if (TryFindPackageTile(farm, out _)) return;   // already placed
 
-            if (!TryFindFreeTile(farm, out Vector2 tile))
+            if (!TryFindFreeTile(farm, _packageSide(), out Vector2 tile))
             {
                 _monitor.Log("No free tile near the farmhouse door for the Cart Catalog package.", LogLevel.Warn);
                 return;
@@ -138,11 +136,11 @@ namespace CartCatalog.Delivery
         /// considers it player-placeable (these porch tiles aren't). Falls back to a spiral search
         /// (skipping the door, its flanking tiles, and the spouse spot) if both preferred spots are
         /// taken.</summary>
-        private static bool TryFindFreeTile(Farm farm, out Vector2 tile)
+        private static bool TryFindFreeTile(Farm farm, string side, out Vector2 tile)
         {
             Point entry = farm.GetMainFarmHouseEntry();
 
-            foreach (int dx in PreferredOffsetsX)
+            foreach (int dx in Core.PorchSide.PreferredOffsetsX(side))
             {
                 var spot = new Vector2(entry.X + dx, entry.Y);
                 if (farm.isTileOnMap(spot) && !farm.objects.ContainsKey(spot))

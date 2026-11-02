@@ -46,6 +46,7 @@ Settings live in `config.json` (created on first run) and can also be edited via
 - **DeliveryDelayDays** (default 1) — whole days between ordering and porch delivery (1 = next morning).
 - **BookPrice** (default 5000) — gold price of the Cart Catalog book in the Traveling Cart.
 - **AppearanceChance** (default 0.5) — chance the book appears in the cart each visit, while not already owned.
+- **PackageSide** (default Right) — which side of the farmhouse door the delivery crate lands on, Right or Left. Try Left if a farmhouse mod hides the crate.
 
 ## Art help welcome
 

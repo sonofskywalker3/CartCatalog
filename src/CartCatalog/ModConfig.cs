@@ -14,5 +14,8 @@ namespace CartCatalog
 
         /// <summary>Chance (0..1) the book appears in the cart each visit, while not already owned.</summary>
         public double AppearanceChance { get; set; } = 0.5;
+
+        /// <summary>Which side of the farmhouse door the delivery crate lands on: "Right" or "Left".</summary>
+        public string PackageSide { get; set; } = CartCatalog.Core.PorchSide.Right;
     }
 }

@@ -27,7 +27,7 @@ namespace CartCatalog
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
 
             _orders = new OrderStore(helper.Data);
-            _porch = new PorchDelivery(helper, this.Monitor, _orders);
+            _porch = new PorchDelivery(helper, this.Monitor, _orders, () => _config.PackageSide);
             _ = new BookShopInjection(helper, () => _config.BookPrice, () => _config.AppearanceChance);
             helper.Events.GameLoop.DayStarted += (_, _) => helper.GameContent.InvalidateCache("Data/Shops");
             _catalogMenu = new CatalogMenu(this.Monitor, () => _config.Markup, this.QueueOrder);
@@ -99,6 +99,11 @@ namespace CartCatalog
                 getValue: () => (float)_config.AppearanceChance, setValue: v => _config.AppearanceChance = v,
                 name: () => "Book appearance chance", tooltip: () => "Chance the book appears each cart visit, until owned.",
                 min: 0f, max: 1f, interval: 0.05f);
+            gmcm.AddTextOption(this.ModManifest,
+                getValue: () => _config.PackageSide, setValue: v => _config.PackageSide = v,
+                name: () => "Package side",
+                tooltip: () => "Which side of the farmhouse door the delivery crate lands on. Try Left if a farmhouse mod hides the crate. Takes effect on the next delivery.",
+                allowedValues: Core.PorchSide.All);
 
             this.Monitor.Log("Registered GMCM options.", LogLevel.Info);
         }
