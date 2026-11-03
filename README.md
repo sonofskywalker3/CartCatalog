@@ -6,7 +6,11 @@
 
 > This README mirrors the [Nexus Mods description](https://www.nexusmods.com/stardewvalley/mods/47146); the two are kept identical (the "Building from source" section below is GitHub-only).
 
-## What's New in v1.0.0 — Porch Package Delivery
+## What's New in v1.1.0 — Choose the Crate's Side
+
+**The delivery crate can now land on either side of the farmhouse door.** If a farmhouse mod hides the crate, set Package side to Left in Generic Mod Config Menu or config.json. Right stays the default, and a change takes effect on the next delivery. Thanks to slapmap2000.
+
+## v1.0.0 — Porch Package Delivery
 
 **Orders now arrive as a physical package on your porch instead of a mailbox letter.** Walk up to the crate the next morning and press the action button to collect everything inside. This fixes the old limit where ordering several different items in one day crammed them into a single hard-to-grab letter slot — every item now comes through in full, and uncollected days accumulate into one crate. Updating from a mail-based version? Any letter still unread in your mailbox is auto-converted into a porch package on your next load — nothing lost.
 
