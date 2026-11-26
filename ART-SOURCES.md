@@ -12,6 +12,7 @@ are not artwork and are not listed either.
 | File | What it is | How |
 |---|---|---|
 | [book.png](src/CartCatalog/assets/book.png) | The Cart Catalog book, the 16 x 16 furniture you place and open to order | a placeholder book sprite drawn as pixel art by AI (Claude, by Anthropic) for The Longest Year, recolored purple by an AI-written script, keeping the page strip cream |
+| The title picture on the Nexus Mods page (not in this repository) | The "Cart Catalog" title card with crates | made with AI |
 
 ## Contributing art
 

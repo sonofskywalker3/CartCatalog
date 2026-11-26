@@ -58,7 +58,7 @@ Full disclosure: I have zero artistic ability, so the in-game book sprite and th
 
 ## AI disclosure
 
-I design my mods and test them, but I'm not a programmer: the code and these docs were written with Claude Code (Anthropic), under my direction, and checked by me in game. The book sprite is a placeholder made with AI; it is listed in [ART-SOURCES.md](ART-SOURCES.md). Any AI art is only there because I can't draw it myself, and I would love for anyone interested to submit replacements, with full credit.
+I design my mods and test them, but I'm not a programmer: the code and these docs were written with Claude Code (Anthropic), under my direction, and checked by me in game. The book sprite and the title picture on the Nexus page were made with AI; both are listed in [ART-SOURCES.md](ART-SOURCES.md). Any AI art is only there because I can't draw it myself, and I would love for anyone interested to submit replacements, with full credit.
 
 ## Also by this author
 
