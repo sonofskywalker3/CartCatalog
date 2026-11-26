@@ -54,7 +54,11 @@ Settings live in `config.json` (created on first run) and can also be edited via
 
 ## Art help welcome
 
-Full disclosure: I have zero artistic ability, so the in-game book sprite and the cover art are rough programmer placeholders. If you'd like to make a nicer icon or cover, please do — I'd happily use it and credit you.
+Full disclosure: I have zero artistic ability, so the in-game book sprite and the cover art are rough programmer placeholders. If you'd like to make a nicer icon or cover, please do — I'd happily use it and credit you. How the book sprite was made is in [ART-SOURCES.md](ART-SOURCES.md).
+
+## AI disclosure
+
+I design my mods and test them, but I'm not a programmer: the code and these docs were written with Claude Code (Anthropic), under my direction, and checked by me in game. The book sprite is a placeholder made with AI; it is listed in [ART-SOURCES.md](ART-SOURCES.md). Any AI art is only there because I can't draw it myself, and I would love for anyone interested to submit replacements, with full credit.
 
 ## Also by this author
 
